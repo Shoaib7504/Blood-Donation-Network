@@ -13,7 +13,7 @@ const navLinks = [
   { to: "/", label: "Home" },
   { to: "/donation-request", label: "Donation Requests" },
   { to: "/search-donor", label: "Search Donor" },
-  { to: "/finding", label: "Funding" },
+  { to: "/funding", label: "Funding" },
 ];
 
 const accountLinks = [{ to: "/dashboard", label: "Dashboard" }];
