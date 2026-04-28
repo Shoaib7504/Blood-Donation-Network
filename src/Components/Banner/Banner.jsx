@@ -1,0 +1,123 @@
+/* eslint-disable no-unused-vars */
+import { Activity, CheckCircle2, Clock3, Droplets, HeartHandshake, MapPin, Search, ShieldCheck, Sparkles, Stethoscope, UserRound, Users } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router';
+import RequestCard from '../RequestCard/RequestCard';
+
+const Banner = () => {
+    const requests = [
+        { name: "Ayesha Rahman", location: "Dhanmondi, Dhaka", group: "A+", time: "Today, 6:30 PM", status: "Pending" },
+        { name: "Mahir Hasan", location: "Chattogram Medical", group: "O-", time: "Tomorrow, 9:00 AM", status: "Urgent" },
+        { name: "Nusrat Jahan", location: "Sylhet Sadar", group: "B+", time: "Apr 28, 11:15 AM", status: "Pending" },
+        { name: "Reza Karim", location: "Rajshahi Central", group: "AB+", time: "Apr 29, 3:45 PM", status: "Matched" },
+    ];
+
+    const features = [
+        { icon: Clock3, title: "Fast Response", text: "Urgent requests are surfaced clearly so donors can act when every minute matters." },
+        { icon: ShieldCheck, title: "Trusted Donors", text: "Verified profile cues and availability details make donor discovery feel safe." },
+        { icon: CheckCircle2, title: "Easy Process", text: "A calm flow guides visitors from intent to action without confusion." },
+        { icon: HeartHandshake, title: "Community Support", text: "Built around people, families, hospitals, and local volunteer networks." },
+    ];
+    const steps = ["Register", "Search / Request", "Connect", "Donate"];
+
+    return (
+        <div>
+            {/*  */}
+            <section className="bg-hero-medical overflow-hidden">
+                <div className="mx-auto grid min-h-[calc(80vh-5rem)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+                    <div>
+                        <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/80 px-4 py-2 text-sm font-semibold text-primary shadow-card">
+                            <Sparkles className="size-4" /> Trusted community blood network
+                        </div>
+                        <h1 className="mt-7 max-w-3xl font-display text-5xl font-black leading-tight text-foreground sm:text-6xl lg:text-7xl">Save Lives, Donate Blood</h1>
+                        <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">One compassionate decision can restore hope for patients, families, and entire communities. Find donors, respond to requests, and make every drop count.</p>
+                        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                            <Link className="flex h-12 px-8 text-base rounded-2xl items-center bg-primary text-primary-foreground shadow-glow hover:bg-blood-deep hover:-translate-y-0.5" to="/dashboard/create-request"><Droplets />Join as a Donor</Link>
+                            <Link className="flex h-12 px-8 text-base rounded-2xl items-center  border border-primary/20 bg-card text-primary shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-primary/35" to="/search-donor"><Search />Search Donors</Link>
+                        </div>
+                        <div className="mt-10 grid max-w-xl grid-cols-3 gap-4">
+                            {["12K+ Donors", "4.8K Requests", "64 Districts"].map((item) => <div key={item} className="rounded-2xl bg-card/75 p-4 text-center shadow-card"><strong className="block text-lg text-primary">{item.split(" ")[0]}</strong><span className="text-xs text-muted-foreground">{item.substring(item.indexOf(" ") + 1)}</span></div>)}
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <div className="glass-panel relative mx-auto max-w-lg rounded-[2rem] border border-border p-6 hover-lift">
+                            <div className="rounded-[1.5rem] bg-cta-medical p-8 text-primary-foreground">
+                                <div className="flex items-center justify-between">
+                                    <span className="rounded-full bg-primary-foreground/15 px-3 py-1 text-sm font-semibold">Emergency ready</span>
+                                    <Stethoscope className="size-8" />
+                                </div>
+                                <div className="mt-12 flex items-end justify-between gap-6">
+                                    <div>
+                                        <p className="text-primary-foreground/80">Current need</p>
+                                        <h3 className="mt-2 font-display text-6xl font-black">O-</h3>
+                                    </div>
+                                    <div className="grid gap-3">
+                                        <span className="flex items-center gap-2 rounded-2xl bg-primary-foreground/15 px-4 py-3"><UserRound className="size-5" /> 42 nearby donors</span>
+                                        <span className="flex items-center gap-2 rounded-2xl bg-primary-foreground/15 px-4 py-3"><MapPin className="size-5" /> 3.2 km radius</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-5 grid grid-cols-2 gap-4">
+                                <div className="rounded-3xl bg-secondary p-5"><Activity className="text-primary" /><p className="mt-3 text-sm font-semibold">Live request matching</p></div>
+                                <div className="rounded-3xl bg-blush p-5"><Users className="text-primary" /><p className="mt-3 text-sm font-semibold">Human donor network</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+                <div className="mx-auto mb-12 max-w-2xl text-center">
+                    <p className="text-xl font-bold uppercase  text-primary">Why LifeDrop</p>
+                    <h2 className="mt-3 font-display text-5xl font-bold text-foreground ">Designed for urgent, human action</h2>
+                    <p className="mt-4 text-lg text-muted-foreground">Clear signals, emotional warmth, and trustworthy UI patterns help donors move confidently.</p>
+                </div>
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    {features.map(({ icon: Icon, title, text }) => (
+                        <article
+                            key={title}
+                            className="hover-lift rounded-3xl border border-border bg-card p-6 shadow-card"
+                        >
+                            <span className="flex size-12 items-center justify-center rounded-2xl bg-blush text-primary">
+                                <Icon />
+                            </span>
+
+                            <h3 className="mt-5 font-display text-xl font-bold">{title}</h3>
+                            <p className="mt-3 text-sm leading-6 text-muted-foreground">{text}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <section className="bg-surface py-20">
+                <div className="mx-auto mb-12 max-w-2xl text-center">
+                    <p className="text-xl font-bold uppercase  text-primary">Recent requests</p>
+                    <h2 className="mt-3 font-display text-5xl font-bold text-foreground ">People waiting for a match</h2>
+                    <p className="mt-4 text-lg text-muted-foreground">Urgency is highlighted with accessible badges and scannable details.</p>
+                </div>
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                    <div className="grid gap-5 md:grid-cols-4">
+                        {steps.map((step, index) => <div key={step} className="relative rounded-3xl border border-border bg-card p-6 shadow-card"><span className="flex size-11 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{index + 1}</span><h3 className="mt-6 font-display text-xl font-bold">{step}</h3><p className="mt-2 text-sm text-muted-foreground">{index === 0 ? "Create a verified donor profile." : index === 1 ? "Find donors or publish a request." : index === 2 ? "Coordinate safely and quickly." : "Give blood and save lives."}</p></div>)}
+                    </div>
+                </div>
+            </section>
+
+
+            <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+                
+                 <div className="mx-auto mb-12 max-w-2xl text-center">
+                    <p className="text-xl font-bold uppercase  text-primary">Recent requests</p>
+                    <h2 className="mt-3 font-display text-5xl font-bold text-foreground ">People waiting for a match</h2>
+                    <p className="mt-4 text-lg text-muted-foreground">Urgency is highlighted with accessible badges and scannable details.</p>
+                </div>
+                <div className="grid gap-5 lg:grid-cols-2">
+                    {requests.map((request) => <RequestCard key={request.name} request={request} />)}
+                </div>
+            </section>
+        </div>
+
+    );
+};
+
+export default Banner;
