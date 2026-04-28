@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Activity, CheckCircle2, Clock3, Droplets, HeartHandshake, MapPin, Search, ShieldCheck, Sparkles, Stethoscope, UserRound, Users } from 'lucide-react';
+import { Activity, CheckCircle2, Clock3, Droplets, HeartHandshake, Mail, MapPin, Phone, Search, ShieldCheck, Sparkles, Stethoscope, UserRound, Users } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router';
 import RequestCard from '../RequestCard/RequestCard';
@@ -98,15 +98,15 @@ const Banner = () => {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
                     <div className="grid gap-5 md:grid-cols-4">
-                        {steps.map((step, index) => <div key={step} className="relative rounded-3xl border border-border bg-card p-6 shadow-card"><span className="flex size-11 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{index + 1}</span><h3 className="mt-6 font-display text-xl font-bold">{step}</h3><p className="mt-2 text-sm text-muted-foreground">{index === 0 ? "Create a verified donor profile." : index === 1 ? "Find donors or publish a request." : index === 2 ? "Coordinate safely and quickly." : "Give blood and save lives."}</p></div>)}
+                        {steps.map((step, index) => <div key={step} className="relative hover-lift rounded-3xl border border-border bg-card p-6 shadow-card"><span className="flex size-11 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{index + 1}</span><h3 className="mt-6 font-display text-xl font-bold">{step}</h3><p className="mt-2 text-sm text-muted-foreground">{index === 0 ? "Create a verified donor profile." : index === 1 ? "Find donors or publish a request." : index === 2 ? "Coordinate safely and quickly." : "Give blood and save lives."}</p></div>)}
                     </div>
                 </div>
             </section>
 
 
             <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-                
-                 <div className="mx-auto mb-12 max-w-2xl text-center">
+
+                <div className="mx-auto mb-12 max-w-2xl text-center">
                     <p className="text-xl font-bold uppercase  text-primary">Recent requests</p>
                     <h2 className="mt-3 font-display text-5xl font-bold text-foreground ">People waiting for a match</h2>
                     <p className="mt-4 text-lg text-muted-foreground">Urgency is highlighted with accessible badges and scannable details.</p>
@@ -114,6 +114,36 @@ const Banner = () => {
                 <div className="grid gap-5 lg:grid-cols-2">
                     {requests.map((request) => <RequestCard key={request.name} request={request} />)}
                 </div>
+            </section>
+
+            {/* cta brand */}
+            <section className="px-4 py-12 sm:px-6 lg:px-8">
+                <div className="bg-cta-medical h-80 mx-auto max-w-7xl overflow-hidden rounded-[2rem] px-6 py-14 text-center text-primary-foreground shadow-soft sm:px-10">
+                    <h2 className="font-display text-3xl font-black sm:text-5xl">Your one donation can save 3 lives</h2>
+                    <p className="mx-auto mt-4 mb-10 max-w-2xl text-primary-foreground/80">Step forward today and become the reason a family receives hopeful news.</p>
+                    <Link className="bg-secondary text-secondary-foreground
+                     shadow-sm hover:bg-secondary/80 py-5 px-8 rounded-2xl  text-lg"
+                        to="/dashboard">Become a Donor</Link>
+                </div>
+            </section>
+
+
+            {/* contract section */}
+            <section className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+                <div>
+                    <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">Contact</p>
+                    <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Need guidance for a request?</h2>
+                    <div className="mt-8 grid gap-4 text-muted-foreground">
+                        <p className="flex items-center gap-3"><Phone className="text-primary" /> +880 1712 345 678</p>
+                        <p className="flex items-center gap-3"><MapPin className="text-primary" /> 24 Humanity Avenue, Dhaka</p>
+                        <p className="flex items-center gap-3"><Mail className="text-primary" /> hello@lifedrop.org</p>
+                    </div>
+                </div>
+                <form className="rounded-3xl border border-border  bg-card p-6 shadow-card">
+                    <div className="grid gap-4 sm:grid-cols-2"><input className="rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring" placeholder="Name" /><input className="rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring" placeholder="Email" /></div>
+                    <textarea className="mt-4 min-h-36 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring" placeholder="Message" />
+                    <button className="mt-4 rounded-2xl px-5 py-3 bg-primary text-primary-foreground shadow-glow hover:bg-blood-deep hover:-translate-y-0.5" >Send Message</button>
+                </form>
             </section>
         </div>
 
