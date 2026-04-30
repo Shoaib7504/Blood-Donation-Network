@@ -1,13 +1,63 @@
-// eslint-disable-next-line no-unused-vars
 import { Droplets, Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react';
-import React, { useState } from 'react';
-import { Link } from 'react-router';
+// eslint-disable-next-line no-unused-vars
+import React, { use, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router';
+import useAuth from '../../Hooks/useAuth';
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = () => {
+    const navigate = useNavigate()
+    const location = useLocation();
     const [showPassword, setShowPassword] = useState(false);
+    const { SignInUser, setUser, LoginWithGoogle } = useAuth()
+    const {
+        register,
+        handleSubmit,
+        // watch,
+        formState: { errors },
+    } = useForm()
+
+    const onSubmit = (data) => {
+        SignInUser(data.email, data.password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                setUser(user)
+                toast.success("Login successful")
+                navigate(`${location.state ? location.state : "/"}`)
+
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error(error.message || "Login failed ");
+                console.log({ errorMessage, errorCode });
+
+            });
+    }
+
+
+
+    // console.log(watch("example")) // watch input value by passing the name of it
 
     return (
         <div>
+            {/*  Toast Container */}
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
             <section className="bg-hero-medical min-h-[calc(100vh-5rem)] px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
                     <div className="hidden lg:block">
@@ -26,7 +76,7 @@ const LoginPage = () => {
                             <h2 className="mt-5 font-display text-3xl font-black">Login</h2>
                             <p className="mt-2 text-sm text-muted-foreground">Continue helping people faster.</p>
                         </div>
-                        <form className="mt-7 grid gap-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="mt-7 grid gap-4">
 
                             <div className="text-left mb-4">
                                 <label className="text-sm font-medium">Email address</label>
@@ -36,8 +86,16 @@ const LoginPage = () => {
                                         type="email"
                                         placeholder="you@example.com"
                                         className="outline-none w-full"
+                                        {...register('email', {
+                                            required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+
+                                        })}
                                     />
+
                                 </div>
+                                {
+                                    errors.email?.type === 'required' && <p className='text-xs mt-1 px-2 text-red-400'>Please Input Your Email</p>
+                                }
                             </div>
 
 
@@ -50,7 +108,13 @@ const LoginPage = () => {
                                         type={showPassword ? "text" : "password"}
                                         placeholder="********"
                                         className="outline-none w-full"
+                                        {...register('password', {
+                                            required: true,
+                                            minLength: 6,
+                                            pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
+                                        })}
                                     />
+
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
@@ -59,6 +123,24 @@ const LoginPage = () => {
                                         {showPassword ? <span><Eye /></span> : <span><EyeOff /></span>}
                                     </button>
                                 </div>
+                                <span>
+                                    {
+                                        errors.password?.type === 'required' &&
+                                        <p className='text-xs mt-1 px-2 text-red-400'>
+                                            Password is required</p>
+                                    }
+                                    {errors.password?.type === 'minLength' &&
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Password must be 6 characters or longer
+                                        </p>
+                                    }
+                                    {errors.password?.type === 'pattern' && (
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Must include uppercase, number & symbol
+                                        </p>
+                                    )}
+
+                                </span>
                             </div>
 
                             <div className="flex justify-between items-center text-sm mb-5">
@@ -85,12 +167,13 @@ const LoginPage = () => {
                         </div>
 
                         {/* Google Login */}
-                        <button className="w-full border py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-50">
+                        <button
+                            onClick={LoginWithGoogle} className="w-full cursor-pointer border py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-50">
                             <span className="text-red-500 font-bold">G</span>
                             Login with Google
                         </button>
 
-                        <p className="mt-6 text-center text-sm text-muted-foreground">New to LifeDrop <Link to= '/register' className="font-bold text-primary">Create account</Link></p>
+                        <p className="mt-6 text-center text-sm text-muted-foreground">New to LifeDrop <Link to='/register' className="font-bold text-primary">Create account</Link></p>
                     </div>
                 </div>
             </section>

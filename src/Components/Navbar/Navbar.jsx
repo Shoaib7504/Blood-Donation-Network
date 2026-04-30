@@ -8,6 +8,8 @@ import {
   X,
 } from "lucide-react";
 import { Link, NavLink } from "react-router";
+import useAuth from "../../Hooks/useAuth";
+
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -19,6 +21,7 @@ const navLinks = [
 const accountLinks = [{ to: "/dashboard", label: "Dashboard" }];
 
 const Navbar = () => {
+  const { user, Logout } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const linkClassName = ({ isActive }) =>
@@ -68,13 +71,18 @@ const Navbar = () => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            to="/login"
-            className="hidden rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-card transition hover:border-primary/30 hover:bg-secondary sm:inline-flex"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Login
-          </Link>
+
+
+
+          {
+            user ? ('') : (<Link
+              to="/login"
+              className="hidden rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-card transition hover:border-primary/30 hover:bg-secondary sm:inline-flex"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Login
+            </Link>)
+          }
 
           <div className="group relative hidden sm:block">
             <button
@@ -82,9 +90,17 @@ const Navbar = () => {
               className="flex items-center gap-2 rounded-full border border-border bg-card p-1.5 pr-3 shadow-card transition hover:border-primary/30"
               aria-label="Account menu"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-blush text-sm font-bold text-primary">
+              {user ? (<div className="w-9 border-2  border-gray-300 rounded-full">
+                <img
+                  className="rounded-2xl"
+                  alt="Tailwind CSS Navbar component"
+                  referrerPolicy="no-referrer"
+                  src={user.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+                />
+              </div>) : (<span className="flex size-9 items-center justify-center rounded-full bg-blush text-sm font-bold text-primary">
                 AR
-              </span>
+              </span>)}
+
               <ChevronDown className="size-4 text-muted-foreground" />
             </button>
 
@@ -98,10 +114,11 @@ const Navbar = () => {
                 Dashboard
               </NavLink>
               <button
+              onClick={Logout}
                 type="button"
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex cursor-pointer w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium hover:bg-secondary"
               >
-                <LogOut className="size-4" />
+                <LogOut  className="size-4" />
                 Logout
               </button>
             </div>
@@ -163,10 +180,11 @@ const Navbar = () => {
               ))}
 
               <button
+              onClick={Logout}
                 type="button"
-                className="flex w-full items-center rounded-xl px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                className="flex cursor-pointer w-full items-center rounded-xl px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
-                <LogOut className="mr-2 size-4" />
+                <LogOut  className="mr-2 size-4" />
                 Logout
               </button>
             </div>
