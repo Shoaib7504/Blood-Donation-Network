@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Droplets, Eye, EyeOff, Lock, Mail, ShieldCheck, User } from 'lucide-react';
+import { Droplets, Eye, EyeOff, Lock, Mail, ShieldCheck, Upload, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
@@ -20,6 +20,8 @@ const RegisterPage = () => {
 
 
     const handelRegistration = (data) => {
+        console.log(data);
+
         createUser(data.email, data.password)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -48,6 +50,8 @@ const RegisterPage = () => {
                 toast.error("Google login failed ❌");
             });
     };
+
+
 
     return (
         <div>
@@ -79,7 +83,7 @@ const RegisterPage = () => {
                             </p>
                             <div className="mt-8 grid gap-4 sm:grid-cols-2">
                                 {["Verified donor profile", "Urgent request access"].map((item) => (
-                                    <div key={item} className="rounded-3xl border p-5">
+                                    <div key={item} className="rounded-3xl hover-lift  border p-5">
                                         <ShieldCheck className="text-primary" />
                                         <p className="mt-3 font-semibold">{item}</p>
                                     </div>
@@ -89,56 +93,150 @@ const RegisterPage = () => {
                     </div>
 
                     {/* Form */}
-                    <div className="mx-auto w-full max-w-md rounded-[2rem] border p-6 sm:p-8">
+                    <div className="mx-auto w-full max-w-2xl hover-lift rounded-[2rem] border border-border bg-card p-6 shadow-soft sm:p-8">
                         <div className="text-center">
-                            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-red-100 text-red-500">
-                                <Droplets className="size-7" />
+                            <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-blush text-primary">
+                                <Droplets className="size-7" fill="currentColor" />
                             </span>
-                            <h2 className="mt-5 text-3xl font-black">Create account</h2>
-                            <p className="mt-2 text-sm text-gray-500">Start your journey today.</p>
+                            <h2 className="mt-5 font-display text-3xl font-black">
+                                Create account
+                            </h2>
+                            <p className="mt-2 text-sm text-muted-foreground">
+                                Start your donor journey today.
+                            </p>
                         </div>
-
                         <form onSubmit={handleSubmit(handelRegistration)} className="mt-7 grid gap-4">
 
+                            {/* Avatar Upload */}
+                            <div className="rounded-3xl border border-dashed border-primary/30 bg-blush/50 p-4">
+                                <label className="flex cursor-pointer flex-col items-center gap-3 text-sm font-semibold">
+                                    <span className="flex size-12 items-center justify-center rounded-full bg-primary text-white">
+                                        <Upload className="size-5" />
+                                    </span>
+                                    <span>Upload avatar</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        {...register("avatar")}
+                                        className="hidden"
+                                    />
+                                </label>
+                            </div>
+
                             {/* Name */}
-                            <div>
-                                <label className="text-sm font-medium">Full Name</label>
-                                <div className="flex items-center border rounded-full px-4 py-3 mt-1">
-                                    <User className="text-red-400 mr-2" />
+
+                            <div className="text-left mb-4">
+                                <label className="text-sm font-medium">Name</label>
+                                <div className="flex items-center bg-secondary py-3 border rounded-full px-4  mt-1">
+                                    <span className="text-red-400 mr-2"><User /></span>
                                     <input
                                         type="text"
                                         placeholder="Ayesha Rahman"
                                         className="outline-none w-full"
-                                        {...register('name', { required: true })}
+                                        {...register('name', {
+                                            required: true, minLength: 6,
+
+                                        })}
                                     />
+
                                 </div>
+                                {
+                                    errors.name?.type === 'required' &&
+                                    <p className='text-xs mt-1 px-2 text-red-400'>Please Input Your Name</p>
+                                }
                             </div>
 
+
+
                             {/* Email */}
-                            <div>
-                                <label className="text-sm font-medium">Email</label>
-                                <div className="flex items-center border rounded-full px-4 py-3 mt-1">
-                                    <Mail className="text-red-400 mr-2" />
+                            <div className="text-left mb-4">
+                                <label className="text-sm font-medium">Email address</label>
+                                <div className="flex items-center bg-secondary py-3 border rounded-full px-4  mt-1">
+                                    <span className="text-red-400 mr-2"><Mail /></span>
                                     <input
                                         type="email"
                                         placeholder="you@example.com"
                                         className="outline-none w-full"
                                         {...register('email', {
-                                            required: true,
-                                            pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+
                                         })}
                                     />
+
                                 </div>
-                                {errors.email && (
-                                    <p className="text-xs mt-1 text-red-400">Valid email required</p>
-                                )}
+                                {
+                                    errors.email?.type === 'required' && <p className='text-xs mt-1 px-2 text-red-400'>Please Input Your Email</p>
+                                }
+                            </div>
+
+                            {/* Blood Group */}
+                            <div className="text-left mb-4">
+                                <label className="text-sm font-semibold">Blood Group</label>
+                                <div className='flex items-center bg-secondary py-3 border rounded-full px-4  mt-1'>
+
+                                    <select
+                                        {...register("bloodGroup", { required: true })}
+                                        className="input input-bordered w-full"
+                                    >
+                                        <option value="Select">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* District & Upazila */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-sm font-semibold">District</label>
+                                    <div className='flex items-center bg-secondary py-3 border rounded-full px-4  mt-1'>
+
+                                        <select
+                                            {...register("district", { required: "District is required" })}
+                                            className="input input-bordered w-full"
+                                        >
+                                            <option value="">Select District</option>
+                                            <option value="Dhaka">Dhaka</option>
+                                            <option value="Chattogram">Chattogram</option>
+                                            <option value="Khulna">Khulna</option>
+                                            <option value="Rajshahi">Rajshahi</option>
+                                            <option value="Barishal">Barishal</option>
+                                            <option value="Sylhet">Sylhet</option>
+                                            <option value="Rangpur">Rangpur</option>
+                                            <option value="Mymensingh">Mymensingh</option>
+                                        </select>
+
+                                        {errors.district && (
+                                            <p className="text-xs text-red-400 mt-1">
+                                                {errors.district.message}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold">Upazila</label>
+                                    <div className='flex items-center bg-secondary py-3 border rounded-full px-4  mt-1'>
+
+                                        <input
+                                            type="text"
+                                            {...register("upazila")}
+                                            className="input input-bordered w-full"
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Password */}
-                            <div>
+                            <div className="text-left mb-3">
                                 <label className="text-sm font-medium">Password</label>
-                                <div className="flex items-center border rounded-full px-4 py-3 mt-1">
-                                    <Lock className="text-red-400 mr-2" />
+                                <div className="flex items-center border bg-secondary rounded-full px-4 py-3 mt-1">
+                                    <span className="text-red-400 mr-2"><Lock /></span>
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="********"
@@ -146,55 +244,110 @@ const RegisterPage = () => {
                                         {...register('password', {
                                             required: true,
                                             minLength: 6,
-                                            pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/,
+                                            pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
                                         })}
                                     />
+
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
+                                        className="ml-2 text-gray-400 hover:text-gray-600"
                                     >
-                                        {showPassword ? <Eye /> : <EyeOff />}
+                                        {showPassword ? <span><Eye /></span> : <span><EyeOff /></span>}
                                     </button>
                                 </div>
-                                {errors.password && (
-                                    <p className="text-xs mt-1 text-red-400">
-                                        Password must have uppercase, number & symbol
-                                    </p>
-                                )}
+                                <span>
+                                    {
+                                        errors.password?.type === 'required' &&
+                                        <p className='text-xs mt-1 px-2 text-red-400'>
+                                            Password is required</p>
+                                    }
+                                    {errors.password?.type === 'minLength' &&
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Password must be 6 characters or longer
+                                        </p>
+                                    }
+                                    {errors.password?.type === 'pattern' && (
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Must include uppercase, number & symbol
+                                        </p>
+                                    )}
+
+                                </span>
                             </div>
 
+
+
+                            {/* Confirm Password */}
+                            <div className="text-left mb-3">
+                                <label className="text-sm font-medium">Confirm Password</label>
+                                <div className="flex items-center border bg-secondary rounded-full px-4 py-3 mt-1">
+                                    <span className="text-red-400 mr-2"><Lock /></span>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="********"
+                                        className="outline-none w-full"
+                                        {...register('confirm-password', {
+                                            required: true,
+                                            minLength: 6,
+                                            pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
+                                        })}
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="ml-2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        {showPassword ? <span><Eye /></span> : <span><EyeOff /></span>}
+                                    </button>
+                                </div>
+                                <span>
+                                    {
+                                        errors.password?.type === 'required' &&
+                                        <p className='text-xs mt-1 px-2 text-red-400'>
+                                            Password is required</p>
+                                    }
+                                    {errors.password?.type === 'minLength' &&
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Password must be 6 characters or longer
+                                        </p>
+                                    }
+                                    {errors.password?.type === 'pattern' && (
+                                        <p className='text-xs mt-1 px-2 text-red-500'>
+                                            Must include uppercase, number & symbol
+                                        </p>
+                                    )}
+
+                                </span>
+                            </div>
+
+                            <div className="flex justify-between items-center text-sm mb-5">
+                                <label className="flex  items-center gap-2">
+                                    <input type="checkbox" />
+                                    Remember me
+                                </label>
+                                <button className="text-red-500">Forgot password?</button>
+                            </div>
+
+
                             {/* Submit */}
-                            <button className="w-full bg-red-500 text-white py-3 rounded-full font-semibold hover:bg-red-600">
-                                Create Account
+                            <button className="w-full bg-red-500 text-white py-3 rounded-full font-semibold shadow-md hover:bg-red-600 transition">
+                                Login
                             </button>
+
                         </form>
-
-                        {/* Divider */}
-                        <div className="flex items-center my-6">
-                            <div className="grow h-px bg-gray-200"></div>
-                            <span className="mx-3 text-xs text-gray-400">OR</span>
-                            <div className="grow h-px bg-gray-200"></div>
-                        </div>
-
-                        {/* Google */}
-                        <button
-                            onClick={handleGoogleLogin}
-                            className="w-full border py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-50"
-                        >
-                            <span className="text-red-500 font-bold">G</span>
-                            Login with Google
-                        </button>
-
-                        <p className="mt-6 text-center text-sm text-gray-500">
+                        <p className="mt-6 text-center text-sm text-muted-foreground">
                             Already have an account?{" "}
-                            <Link to="/login" className="font-bold text-red-500">
+                            <Link to="/login" className="font-bold text-primary">
                                 Login
                             </Link>
                         </p>
                     </div>
                 </div>
-            </section>
-        </div>
+
+            </section >
+        </div >
     );
 };
 

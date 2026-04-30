@@ -18,7 +18,7 @@ const navLinks = [
   { to: "/funding", label: "Funding" },
 ];
 
-const accountLinks = [{ to: "/dashboard", label: "Dashboard" }];
+
 
 const Navbar = () => {
   const { user, Logout } = useAuth()
@@ -114,11 +114,11 @@ const Navbar = () => {
                 Dashboard
               </NavLink>
               <button
-              onClick={Logout}
+                onClick={Logout}
                 type="button"
                 className="flex cursor-pointer w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium hover:bg-secondary"
               >
-                <LogOut  className="size-4" />
+                <LogOut className="size-4" />
                 Logout
               </button>
             </div>
@@ -167,24 +167,24 @@ const Navbar = () => {
                 Login
               </NavLink>
 
-              {accountLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={mobileLinkClassName}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <LayoutDashboard className="mr-2 size-4" />
-                  {link.label}
-                </NavLink>
-              ))}
+
+              <NavLink
+
+                to='/dashboard'
+                className={mobileLinkClassName}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <LayoutDashboard className="mr-2 size-4" />
+
+              </NavLink>
+
 
               <button
-              onClick={Logout}
+                onClick={Logout}
                 type="button"
                 className="flex cursor-pointer w-full items-center rounded-xl px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
-                <LogOut  className="mr-2 size-4" />
+                <LogOut className="mr-2 size-4" />
                 Logout
               </button>
             </div>
