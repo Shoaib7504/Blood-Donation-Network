@@ -170,6 +170,9 @@
         letter-spacing: 0;
     }
 }
+a.active{
+    @apply bg-red-500 text-white
+}
 
 @layer utilities {
     .bg-hero-medical {

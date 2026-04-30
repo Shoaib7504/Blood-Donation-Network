@@ -11,6 +11,9 @@ import DashboardLayout from "../Layout/DashboardLayout/DashboardLayout";
 import PrivateRoutes from "./PrivateRoutes";
 import DashboardHome from "../Layout/DashboardLayout/DashboardHome";
 import Profile from "../Layout/DashboardLayout/Profile";
+import MyRequest from "../Layout/DashboardLayout/MyRequest";
+import CreateRequest from "../Layout/DashboardLayout/CreateRequest";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 
 const router = createBrowserRouter([
@@ -68,7 +71,21 @@ const router = createBrowserRouter([
         {
             path: '/dashboard/profile',
             Component: Profile
-        }]
+        },
+        {
+            path: '/dashboard/my-requests',
+            Component: MyRequest
+
+        },
+        {
+            path: '/dashboard/create-request',
+            Component: CreateRequest
+        }
+        ]
+    },
+    {
+        path: '/*',
+        element: <ErrorPage></ErrorPage>
     }
 ])
 export default router
