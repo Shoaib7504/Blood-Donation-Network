@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider, updateProfile } from "firebase/auth";
 import app from '../Firebase/firebase.config';
 import { toast } from 'react-toastify';
 const provider = new GoogleAuthProvider();
@@ -46,6 +46,10 @@ const AuthProvider = ({ children }) => {
 
     }
 
+    const updateUserProfile=(profile)=>{
+      return  updateProfile(auth.currentUser, profile)
+    }
+
     const authInfo = {
         createUser,
         SignInUser,
@@ -54,7 +58,8 @@ const AuthProvider = ({ children }) => {
         loading,
         setLoading,
         Logout,
-        LoginWithGoogle
+        LoginWithGoogle,
+        updateUserProfile
     }
     return (
         <AuthContext value={authInfo}>

@@ -6,10 +6,11 @@ import { Link, useNavigate } from 'react-router';
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAuth from '../../Hooks/useAuth';
+import axios from 'axios';
 
 const RegisterPage = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const { createUser, setUser, LoginWithGoogle } = useAuth();
+    const { createUser, setUser, LoginWithGoogle, updateUserProfile } = useAuth();
     const navigate = useNavigate();
 
     const {
@@ -20,20 +21,58 @@ const RegisterPage = () => {
 
 
     const handelRegistration = (data) => {
-        console.log(data);
+        const PhotoImg = data.image?.[0];
 
+        if (!PhotoImg) {
+            toast.error("Please upload an image");
+            return;
+        }
+
+        //  Create user
         createUser(data.email, data.password)
             .then((userCredential) => {
                 const user = userCredential.user;
-
                 setUser(user);
 
-                toast.success("Account created successfully 🎉");
+                // Upload image
+                const formData = new FormData();
+                formData.append("image", PhotoImg);
 
+                const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`;
+
+                // IMPORTANT: return this promise
+                return axios.post(image_API_URL, formData);
+            })
+            .then((res) => {
+                const imageUrl = res.data.data.url;
+                console.log("Image URL:", imageUrl);
+                // update user profile
+                const userProfile = {
+                    displayName: data.name,
+                    photoURL: imageUrl
+                }
+
+                updateUserProfile(userProfile)
+                    .then((res) => {
+                        console.log('after update profile', res);
+
+
+                    }).catch((error) => {
+                        // An error occurred
+                        console.log(error);
+
+                    });
+
+            })
+            .then(() => {
+                console.log("Profile updated successfully");
+
+                toast.success("Account created successfully");
                 navigate('/');
             })
             .catch((error) => {
-                toast.error(error.message || "Registration failed ❌");
+                console.error(error);
+                toast.error(error.message || "Registration failed");
             });
     };
 
@@ -117,7 +156,7 @@ const RegisterPage = () => {
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        {...register("avatar")}
+                                        {...register("image")}
                                         className="hidden"
                                     />
                                 </label>
@@ -333,7 +372,7 @@ const RegisterPage = () => {
 
                             {/* Submit */}
                             <button className="w-full bg-red-500 text-white py-3 rounded-full font-semibold shadow-md hover:bg-red-600 transition">
-                                Login
+                                Create Account
                             </button>
 
                         </form>
