@@ -12,7 +12,7 @@ const RegisterPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const { createUser, setUser, LoginWithGoogle, updateUserProfile } = useAuth();
     const navigate = useNavigate();
-
+// React hook form
     const {
         register,
         handleSubmit,

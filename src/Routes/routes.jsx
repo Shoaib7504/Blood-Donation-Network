@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
-import MainLayout from "../Layout/MainLayout";
 import Home from "../pages/Home/Home";
+import MainLayout from "../Layout/MainLayout";
 import DonationRequest from "../pages/DonationRequest/DonationRequest";
 import SearchDonor from "../pages/searchDonor/SearchDonor";
 import Funding from "../pages/Funding/Funding";
@@ -19,7 +19,7 @@ import ErrorPage from "../pages/ErrorPage/ErrorPage";
 const router = createBrowserRouter([
     {
         path: '/',
-        Component: MainLayout,
+        Component:MainLayout,
         children: [
             {
                 path: '/', index: true,
