@@ -5,6 +5,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
 import ErrorPage from '../../pages/ErrorPage/ErrorPage';
+import LoadingSpiner from '../../Components/LoadingSpiner';
 
 const CreateRequest = () => {
     // use mutation hook use for put ,patch,post method not for get data if you get data then use tanstack query
@@ -46,16 +47,18 @@ const CreateRequest = () => {
 
     const onSubmit = async data => {
         console.log(data);
-        const { recipient, district, hospital, blood, date, time } = data
+        const { name, district,contact, note, hospital, blood, date, time } = data
 
         try {
             const requestData = {
-                recipient,
-                district,
-                hospital,
+                name,
+                location: `${district}, ${hospital}`,
                 blood,
                 date,
-                time
+                time,
+                contact,
+                note
+               
             }
             await mutateAsync(requestData)
             // const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/request`, requestData)
@@ -66,7 +69,7 @@ const CreateRequest = () => {
 
         }
     };
-    if (isPending) <span class="loading loading-spinner loading-lg"></span>
+    if (isPending) return <LoadingSpiner></LoadingSpiner>
     if (isError) return <ErrorPage></ErrorPage>
 
 
@@ -108,11 +111,11 @@ const CreateRequest = () => {
                         <label htmlFor="recipient">Recipient name</label>
                         <input
                             id="recipient"
-                            {...register("recipient", { required: "Recipient name is required" })}
+                            {...register("name", { required: "Recipient name is required" })}
                             className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
                             placeholder="Recipient name"
                         />
-                        {errors.recipient && <p className="text-red-500">{errors.recipient.message}</p>}
+                        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                     </div>
 
                     <div>

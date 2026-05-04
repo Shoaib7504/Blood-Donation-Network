@@ -2,15 +2,27 @@
 import React from "react";
 import RequestCard from "../../Components/RequestCard/RequestCard";
 import { HeartHandshake } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpiner from "../../Components/LoadingSpiner";
 
 const DonationRequest = () => {
-    const requests = [
-        { name: "Ayesha Rahman", location: "Dhanmondi, Dhaka", group: "A+", time: "Today, 6:30 PM", status: "Pending" },
-        { name: "Mahir Hasan", location: "Chattogram Medical", group: "O-", time: "Tomorrow, 9:00 AM", status: "Urgent" },
-        { name: "Nusrat Jahan", location: "Sylhet Sadar", group: "B+", time: "Apr 28, 11:15 AM", status: "Pending" },
-        { name: "Reza Karim", location: "Rajshahi Central", group: "AB+", time: "Apr 29, 3:45 PM", status: "Matched" },
-    ];
 
+    const { data: details, isLoading, isError } = useQuery({
+        queryKey: ["requests"],
+        queryFn: async () => {
+            const result = await axios(`${import.meta.env.VITE_API_URL}/request`)
+            return result.data
+        }
+    })
+
+    if (isLoading) return <LoadingSpiner></LoadingSpiner>
+    if (isError) console.log(isError);
+
+
+
+
+    console.log(details);
     return (
         <div>
             <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">
@@ -26,16 +38,18 @@ const DonationRequest = () => {
             <section className="max-w-7xl mx-auto px-4 py-12">
 
                 {/* Cards */}
-                <div className="grid justify-evenly gap-5 lg:grid-cols-2">
-                    {requests.map((request, index) => (
-                        <div key={index} className="relative">
+                {
+                    details && details.length > 0 ? (<div className="grid justify-evenly gap-5 lg:grid-cols-2">
+                        {details.map((request) => (
+                            <div key={request._id} className="relative">
 
-                            <RequestCard request={request} />
+                                <RequestCard request={request} />
 
 
-                        </div>
-                    ))}
-                </div>
+                            </div>
+                        ))}
+                    </div>) : null
+                }
 
                 {/* Simple Card (Modal Preview) */}
                 <div className="mt-10 max-w-md mx-auto border rounded-2xl p-6 text-center shadow-md">
