@@ -1,20 +1,90 @@
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
+import ErrorPage from '../../pages/ErrorPage/ErrorPage';
 
 const CreateRequest = () => {
+    // use mutation hook use for put ,patch,post method not for get data if you get data then use tanstack query
+    const { isPending, isError, mutateAsync, reset: mutationRest } = useMutation({
+        mutationFn: async (payload) =>
+            await axios.post(`${import.meta.env.VITE_API_URL}/request`, payload),
+
+        onSuccess: data => {
+            console.log(data);
+            toast.success('Your request successfully submitted')
+            mutationRest()
+
+        },
+        onError: error => {
+            console.log(error);
+
+        },
+        onMutate: payload => {
+            console.log('i will post this data....', payload);
+
+        },
+        onSettled: (data, error) => {
+            if (data) console.log(data);
+            if (error) console.log(error);
+        },
+        retry: 3,
+
+    })
+
+
+
+
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm();
 
-    const onSubmit = (data) => {
-        console.table(data);
+    const onSubmit = async data => {
+        console.log(data);
+        const { recipient, district, hospital, blood, date, time } = data
+
+        try {
+            const requestData = {
+                recipient,
+                district,
+                hospital,
+                blood,
+                date,
+                time
+            }
+            await mutateAsync(requestData)
+            // const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/request`, requestData)
+            // console.log(data);
+            reset()
+        } catch (error) {
+            console.log(error);
+
+        }
     };
+    if (isPending) <span class="loading loading-spinner loading-lg"></span>
+    if (isError) return <ErrorPage></ErrorPage>
+
 
     return (
         <div className='px-10'>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
 
             <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">
                 <div className="px-4 py-16 sm:px-6 lg:px-8">

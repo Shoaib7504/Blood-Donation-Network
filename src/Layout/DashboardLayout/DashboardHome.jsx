@@ -4,7 +4,7 @@ import useAuth from '../../Hooks/useAuth';
 
 const DashboardHome = () => {
   const { user } = useAuth()
-  console.log(user);
+  // console.log(user);
   
   const statsData = [
     { id: 1, label: "Total Requests", value: "28" },

@@ -9,7 +9,7 @@ const Footer = () => {
     const navLinks = [
         { label: "Home", to: "/" },
         { label: "Donation Requests", to: "/donation-requests" },
-        { label: "Search Donors", to: "/search-donors" },
+        { label: "Search Donors", to: "/search-donor" },
         { label: "Funding", to: "/funding" },
     ]
     return (
