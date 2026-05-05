@@ -28,6 +28,7 @@ const Profile = () => {
           </div>
           <h2 className="mt-4 font-display text-2xl font-bold">{user.displayName}</h2>
           <p className="text-muted-foreground">O+ verified donor</p>
+          <p>{user.email}</p>
         </div>
         <form>
           <div className="grid grid-cols-2 gap-4">
@@ -89,17 +90,13 @@ const Profile = () => {
 
           </div>
 
-          <button
-            type="submit"
-            className="mt-6"
-          >
-            Save Changes
-          </button>
-        </form>
-
-        <button className="mt-6 px-3 py-2 rounded-2xl bg-primary text-primary-foreground shadow-glow hover:bg-blood-deep hover:-translate-y-0.5">
+           <button type='submit'
+            className="mt-6 cursor-pointer px-3 py-2 rounded-2xl bg-primary text-primary-foreground shadow-glow hover:bg-blood-deep hover:-translate-y-0.5">
           Save Changes
         </button>
+        </form>
+
+      
       </div>
     </div>
   );

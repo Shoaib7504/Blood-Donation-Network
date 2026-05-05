@@ -8,9 +8,9 @@ import AuthProvider from './Context/AuthProvider'
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query'
 
+} from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 const queryClient = new QueryClient()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -18,6 +18,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <RouterProvider router={router}></RouterProvider>
       </AuthProvider>
+         <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>,
 )

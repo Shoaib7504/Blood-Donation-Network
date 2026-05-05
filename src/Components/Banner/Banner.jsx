@@ -3,14 +3,25 @@ import { Activity, CheckCircle2, Clock3, Droplets, HeartHandshake, Mail, MapPin,
 import React from 'react';
 import { Link } from 'react-router';
 import RequestCard from '../RequestCard/RequestCard';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import LoadingSpiner from '../LoadingSpiner';
 
 const Banner = () => {
-    const requests = [
-        { name: "Ayesha Rahman", location: "Dhanmondi, Dhaka", group: "A+", time: "Today, 6:30 PM", status: "Pending" },
-        { name: "Mahir Hasan", location: "Chattogram Medical", group: "O-", time: "Tomorrow, 9:00 AM", status: "Urgent" },
-        { name: "Nusrat Jahan", location: "Sylhet Sadar", group: "B+", time: "Apr 28, 11:15 AM", status: "Pending" },
-        { name: "Reza Karim", location: "Rajshahi Central", group: "AB+", time: "Apr 29, 3:45 PM", status: "Matched" },
-    ];
+    const { data: details, isLoading, isError } = useQuery({
+        queryKey: ["requests"],
+        queryFn: async () => {
+            const result = await axios(`${import.meta.env.VITE_API_URL}/request`)
+            return result.data
+        }
+    })
+
+    if (isLoading) return <LoadingSpiner></LoadingSpiner>
+    if (isError) console.log(isError);
+
+    const sliceData = details.slice(0, 3)
+    console.log(sliceData);
+
 
     const features = [
         { icon: Clock3, title: "Fast Response", text: "Urgent requests are surfaced clearly so donors can act when every minute matters." },
@@ -112,7 +123,7 @@ const Banner = () => {
                     <p className="mt-4 text-lg text-muted-foreground">Urgency is highlighted with accessible badges and scannable details.</p>
                 </div>
                 <div className="grid gap-5 lg:grid-cols-2">
-                    {requests.map((request) => <RequestCard key={request.name} request={request} />)}
+                    {sliceData.map((request) => <RequestCard key={request.name} request={request} />)}
                 </div>
             </section>
 

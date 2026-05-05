@@ -52,7 +52,7 @@ const RequestCard = ({ request }) => {
 
                     {/* Action */}
                     <div>
-                        <button className="btn btn-soft">
+                        <button className=" px-3 py-1.5 rounded-2xl bg-blush text-primary hover:bg-accent hover:-translate-y-0.5">
                             View Details
                         </button>
                     </div>

@@ -6,8 +6,10 @@ import { useForm } from 'react-hook-form';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
 import ErrorPage from '../../pages/ErrorPage/ErrorPage';
 import LoadingSpiner from '../../Components/LoadingSpiner';
+import useAuth from '../../Hooks/useAuth';
 
 const CreateRequest = () => {
+ const { user } = useAuth()
     // use mutation hook use for put ,patch,post method not for get data if you get data then use tanstack query
     const { isPending, isError, mutateAsync, reset: mutationRest } = useMutation({
         mutationFn: async (payload) =>
@@ -57,7 +59,8 @@ const CreateRequest = () => {
                 date,
                 time,
                 contact,
-                note
+                note,
+                user:user.email
                
             }
             await mutateAsync(requestData)
