@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
 
     const Logout = () => {
         return signOut(auth).then(() => {
-           toast.success("Login successful")
+           toast.success("Logout successful")
         }).catch((error) => {
             console.log(error);
 

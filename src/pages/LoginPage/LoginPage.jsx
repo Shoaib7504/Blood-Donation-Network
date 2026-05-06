@@ -6,6 +6,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { saveOrUpdateUser } from '../../utils';
 
 const LoginPage = () => {
     const navigate = useNavigate()
@@ -19,26 +20,51 @@ const LoginPage = () => {
         formState: { errors },
     } = useForm()
 
-    const onSubmit = (data) => {
-        SignInUser(data.email, data.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                setUser(user)
-                toast.success("Login successful")
-                navigate(`${location.state ? location.state : "/"}`)
+  const onSubmit = async (data) => {
+    await SignInUser(data.email, data.password)
+        .then(async (userCredential) => {
+            const user = userCredential.user;
 
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                toast.error(error.message || "Login failed ");
-                console.log({ errorMessage, errorCode });
+            setUser(user);
+            toast.success("Login successful");
+            navigate(`${location.state ? location.state : "/"}`);
 
+            await saveOrUpdateUser({
+                name: user?.displayName,
+                email: user?.email,
+                photoURL: user?.photoURL
             });
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            toast.error(error.message || "Login failed ");
+            console.log({ errorMessage, errorCode });
+        });
+};
+
+  const handleGoogleLogin = async () => {
+    try {
+        const result = await LoginWithGoogle();
+        const user = result.user;
+
+        setUser(user);
+
+        toast.success("Google login successful");
+        navigate('/');
+
+        // run this after navigation
+        await saveOrUpdateUser({
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL
+        });
+
+    } catch (error) {
+        console.error(error);
+        toast.error(error.message || "Google login failed");
     }
-
-
+};
 
     // console.log(watch("example")) // watch input value by passing the name of it
 
@@ -168,7 +194,7 @@ const LoginPage = () => {
 
                         {/* Google Login */}
                         <button
-                            onClick={LoginWithGoogle} className="w-full cursor-pointer border py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-50">
+                            onClick={handleGoogleLogin} className="w-full cursor-pointer border py-3 rounded-full flex items-center justify-center gap-2 hover:bg-gray-50">
                             <span className="text-red-500 font-bold">G</span>
                             Login with Google
                         </button>

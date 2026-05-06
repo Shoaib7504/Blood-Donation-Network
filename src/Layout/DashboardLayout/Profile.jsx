@@ -1,9 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import useAuth from '../../Hooks/useAuth';
+import useRole from '../../Hooks/useRole';
 
 const Profile = () => {
   const { user } = useAuth()
+  // console.log(user);
+    const {role,isReloading}=useRole()
+  
   return (
     <div className='px-10'>
 
@@ -27,7 +31,7 @@ const Profile = () => {
             />
           </div>
           <h2 className="mt-4 font-display text-2xl font-bold">{user.displayName}</h2>
-          <p className="text-muted-foreground">O+ verified donor</p>
+          {/* <p className="text-muted-foreground">{user.blood} verified donor</p> */}
           <p>{user.email}</p>
         </div>
         <form>
