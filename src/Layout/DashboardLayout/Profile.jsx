@@ -6,8 +6,10 @@ import useRole from '../../Hooks/useRole';
 const Profile = () => {
   const { user } = useAuth()
   // console.log(user);
-    const {role,isReloading}=useRole()
-  
+  const { role, isReloading } = useRole()
+  console.log(role, isReloading);
+
+
   return (
     <div className='px-10'>
 
@@ -31,7 +33,7 @@ const Profile = () => {
             />
           </div>
           <h2 className="mt-4 font-display text-2xl font-bold">{user.displayName}</h2>
-          {/* <p className="text-muted-foreground">{user.blood} verified donor</p> */}
+          <p className="text-muted-foreground">{role}</p>
           <p>{user.email}</p>
         </div>
         <form>
@@ -94,13 +96,13 @@ const Profile = () => {
 
           </div>
 
-           <button type='submit'
+          <button type='submit'
             className="mt-6 cursor-pointer px-3 py-2 rounded-2xl bg-primary text-primary-foreground shadow-glow hover:bg-blood-deep hover:-translate-y-0.5">
-          Save Changes
-        </button>
+            Save Changes
+          </button>
         </form>
 
-      
+
       </div>
     </div>
   );

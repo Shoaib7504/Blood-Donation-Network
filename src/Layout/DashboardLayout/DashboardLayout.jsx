@@ -1,18 +1,13 @@
-import { Droplets, Home, LogOut, PlusCircle, User } from 'lucide-react';
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+import { ActivityIcon, Droplets, HeartPulse, House, LogOut, User, UserRoundPen } from 'lucide-react';
 import { Link, NavLink, Outlet } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
+import useRole from '../../Hooks/useRole';
+import LoadingSpiner from '../../Components/LoadingSpiner';
 
 const DashboardLayout = () => {
     const { Logout } = useAuth()
-
-    const sideLinks = [
-        { label: "Profile", to: "/dashboard/profile", icon: User },
-        { label: "Dashboard Home", to: "/dashboard", icon: Home },
-        { label: "My Requests", to: "/dashboard/my-requests", icon: Droplets },
-        { label: "Create Request", to: "/dashboard/create-request", icon: PlusCircle },
-    ]
+    const { role, isReloading } = useRole()
+    if(isReloading) return <LoadingSpiner></LoadingSpiner>
     return (
         <div className="w-11/12 mx-auto grid grid-cols-1 lg:grid-cols-8">
 
@@ -40,17 +35,99 @@ const DashboardLayout = () => {
                     </Link>
 
                     <nav className="mt-8 grid gap-2">
-                        {sideLinks.map(({ label, to, icon: Icon }) => (
-                            <NavLink
-                                key={to}
-                                to={to}
-                                activeOptions={{ exact: to === "/dashboard" }}
-                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-                            >
-                                <Icon className="size-5" />
-                                {label}
+
+                        {role === 'donor' && (
+                            <>
+                                <NavLink to='/dashboard/profile'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <User /> Profile
+                                </NavLink>
+
+                                <NavLink to='/dashboard'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <House /> Dashboard Home
+                                </NavLink>
+
+                                <NavLink to='/dashboard/my-requests'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <Droplets /> My Requests
+                                </NavLink>
+
+                                <NavLink to='/dashboard/create-request'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <HeartPulse /> Create Request
+                                </NavLink>
+                            </>
+                        )}
+                        {role === 'admin' && <> <NavLink to='/dashboard/statistic'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <ActivityIcon /> Statistic
+                        </NavLink>
+                            <NavLink to='/dashboard/profile'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <User /> Profile
                             </NavLink>
-                        ))}
+                            <NavLink to='/dashboard'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <House /> Dashboard Home
+                            </NavLink>
+                            <NavLink to='/dashboard/my-requests'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <Droplets />  My Requests
+                            </NavLink>
+                            <NavLink to='/dashboard/create-request'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <HeartPulse />  Create Request
+                            </NavLink>
+                            <NavLink to='/dashboard/manageUser'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <UserRoundPen />  ManageUser
+                            </NavLink>
+                        </>}
+                        {
+                            role === 'Volunteer' && <><NavLink to='/dashboard/profile'
+                                className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                <User /> Profile
+                            </NavLink>
+                                <NavLink to='/dashboard'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <House /> Dashboard Home
+                                </NavLink>
+                                <NavLink to='/dashboard/my-requests'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <Droplets />  My Requests
+                                </NavLink>
+                                <NavLink to='/dashboard/create-request'
+                                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                                    <HeartPulse />  Create Request
+                                </NavLink>
+                            </>
+                        }
+                        {/* <NavLink to='/dashboard/statistic'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <ActivityIcon /> Statistic
+                        </NavLink>
+                        <NavLink to='/dashboard/profile'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <User /> Profile
+                        </NavLink>
+                        <NavLink to='/dashboard'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <House /> Dashboard Home
+                        </NavLink>
+                        <NavLink to='/dashboard/my-requests'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <Droplets />  My Requests
+                        </NavLink>
+                        <NavLink to='/dashboard/create-request'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <HeartPulse />  Create Request
+                        </NavLink>
+                        <NavLink to='/dashboard/manageUser'
+                            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground">
+                            <UserRoundPen />  ManageUser
+                        </NavLink> */}
+
 
                         <button
                             onClick={Logout}

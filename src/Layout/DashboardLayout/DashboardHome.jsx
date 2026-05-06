@@ -55,7 +55,7 @@ const DashboardHome = () => {
     <div>
       <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">
         <div className="  px-4 py-16  sm:px-6 lg:px-8">
-          <h1 className="font-display text-4xl ml-20 font-black sm:text-6xl">Welcome back, {user?('Aysha Raham') :user.displayName}
+          <h1 className="font-display text-4xl ml-20 font-black sm:text-6xl">Welcome back, {user? user.displayName:('Aysha Raham')}
           </h1>
           <p className="mt-4 max-w-2xl ml-20 text-lg text-muted-foreground">Here is a quick view of request activity and donor response.
 

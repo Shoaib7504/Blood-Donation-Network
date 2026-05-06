@@ -14,12 +14,14 @@ import Profile from "../Layout/DashboardLayout/Profile";
 import MyRequest from "../Layout/DashboardLayout/MyRequest";
 import CreateRequest from "../Layout/DashboardLayout/CreateRequest";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Statistic from "../Layout/DashboardLayout/Statistic";
+import ManageUser from "../Layout/DashboardLayout/ManageUser";
 
 
 const router = createBrowserRouter([
     {
         path: '/',
-        Component:MainLayout,
+        Component: MainLayout,
         children: [
             {
                 path: '/', index: true,
@@ -80,6 +82,15 @@ const router = createBrowserRouter([
         {
             path: '/dashboard/create-request',
             Component: CreateRequest
+        },
+        {
+            path: '/dashboard/statistic',
+            Component: Statistic
+
+        },
+        {
+            path:'/dashboard/manageUser',
+            Component: ManageUser
         }
         ]
     },
