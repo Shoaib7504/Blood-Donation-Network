@@ -16,6 +16,9 @@ import CreateRequest from "../Layout/DashboardLayout/CreateRequest";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Statistic from "../Layout/DashboardLayout/Statistic";
 import ManageUser from "../Layout/DashboardLayout/ManageUser";
+import VolunteerRequest from "../Layout/DashboardLayout/VolunteerRequest";
+import AdminRoute from "./AdminRoute";
+import VolunteerRoute from "./VolunteerRoute";
 
 
 const router = createBrowserRouter([
@@ -81,16 +84,28 @@ const router = createBrowserRouter([
         },
         {
             path: '/dashboard/create-request',
-            Component: CreateRequest
+            element: <VolunteerRoute>
+                <CreateRequest></CreateRequest>
+            </VolunteerRoute>
         },
         {
             path: '/dashboard/statistic',
-            Component: Statistic
+            element: <AdminRoute>
+                <Statistic></Statistic>
+            </AdminRoute>
 
         },
         {
-            path:'/dashboard/manageUser',
-            Component: ManageUser
+            path: '/dashboard/manageUser',
+            element: <AdminRoute>
+                <ManageUser></ManageUser>
+            </AdminRoute>
+        },
+        {
+            path: '/dashboard/volunteerRequest',
+            element: <AdminRoute>
+                <VolunteerRequest></VolunteerRequest>
+            </AdminRoute>
         }
         ]
     },
