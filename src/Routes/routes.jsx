@@ -19,6 +19,7 @@ import ManageUser from "../Layout/DashboardLayout/ManageUser";
 import VolunteerRequest from "../Layout/DashboardLayout/VolunteerRequest";
 import AdminRoute from "./AdminRoute";
 import VolunteerRoute from "./VolunteerRoute";
+import PaymentSuccess from "../pages/Payment/PaymentSuccess";
 
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
                 element: <PrivateRoutes>
                     <Funding></Funding>
                 </PrivateRoutes>
+            },
+            {
+                path:'/payment-success',
+                Component:PaymentSuccess
             }
         ]
     },
