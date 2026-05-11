@@ -27,6 +27,7 @@ const DashboardLayout = () => {
   const { Logout } = useAuth();
 
   const { role, isReloading } = useRole();
+  console.log(role);
 
   if (isReloading) {
     return <LoadingSpiner />;
@@ -43,7 +44,7 @@ const DashboardLayout = () => {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "Something went wrong"
+        "Something went wrong"
       );
     }
   };

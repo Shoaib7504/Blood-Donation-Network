@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "daisyui/daisyui.css" @theme inline;
 
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);

@@ -19,7 +19,7 @@ const Funding = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
-  // stripe payment
+  // stripe payment — requires login so uses axiosSecure
   const handelPayment = async () => {
     try {
       const paymentInfo = {
@@ -28,8 +28,8 @@ const Funding = () => {
         amount: 100,
       };
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/create-checkout-session`,
+      const res = await axiosSecure.post(
+        `/create-checkout-session`,
         paymentInfo
       );
 
@@ -39,7 +39,7 @@ const Funding = () => {
     }
   };
 
-  // get donations
+  // ✅ FIX: /donation is public — use plain axios, no token needed
   const {
     data: fundingRecords = [],
     isLoading,
@@ -47,15 +47,17 @@ const Funding = () => {
   } = useQuery({
     queryKey: ["funding-records"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/donation");
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/donation`
+      );
       return res.data;
     },
   });
 
   // total donation amount
- const totalFund = fundingRecords.reduce((total, item) => {
-  return total + Number(item.donationAmount || 0);
-}, 0);
+  const totalFund = fundingRecords.reduce((total, item) => {
+    return total + Number(item.donationAmount || 0);
+  }, 0);
 
   const items = [
     "Emergency transport",
@@ -78,7 +80,7 @@ const Funding = () => {
       {/* hero section */}
       <section className="bg-hero-medical px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-center">
-          
+
           {/* left side */}
           <div>
             <p className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-primary shadow-card">
@@ -234,8 +236,11 @@ const Funding = () => {
 
                     {/* date */}
                     <td className="px-6 py-4 text-muted-foreground">
-                     {donation.payment_at}
-                       
+                      {new Date(donation.payment_at).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </td>
 
                     {/* payment method */}

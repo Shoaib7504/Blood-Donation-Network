@@ -13,16 +13,21 @@ const useAxiosSecure = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!loading && user?.accessToken) {
-      // Add request interceptor
+    if (!loading && user) {
+
+     // use async request interceptor to always get a fresh token
       const requestInterceptor = axiosInstance.interceptors.request.use(
-        config => {
-          config.headers.Authorization = `Bearer ${user.accessToken}`
+        async (config) => {
+          try {
+            const token = await user.getIdToken() // always fresh, auto-refreshes
+            config.headers.Authorization = `Bearer ${token}`
+          } catch (error) {
+            console.error('Failed to get token:', error)
+          }
           return config
         }
       )
 
-      // Add response interceptor
       const responseInterceptor = axiosInstance.interceptors.response.use(
         res => res,
         err => {
@@ -38,7 +43,6 @@ const useAxiosSecure = () => {
         }
       )
 
-      // Cleanup to prevent multiple interceptors on re-renders
       return () => {
         axiosInstance.interceptors.request.eject(requestInterceptor)
         axiosInstance.interceptors.response.eject(responseInterceptor)
@@ -48,4 +52,5 @@ const useAxiosSecure = () => {
 
   return axiosInstance
 }
+
 export default useAxiosSecure
