@@ -42,7 +42,7 @@ const RegisterPage = () => {
             const res = await axios.post(image_API_URL, formData);
 
             const imageUrl = res.data.data.url;
-            console.log("Image URL:", imageUrl);
+            // console.log("Image URL:", imageUrl);
 
             //  Save user in DB
             await saveOrUpdateUser({
@@ -57,7 +57,7 @@ const RegisterPage = () => {
                 photoURL: imageUrl
             });
 
-            console.log("Profile updated successfully");
+            // console.log("Profile updated successfully");
 
             //   navigate
             toast.success("Account created successfully");

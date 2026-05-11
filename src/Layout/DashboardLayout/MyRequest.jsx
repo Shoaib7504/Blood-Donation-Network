@@ -15,7 +15,7 @@ const MyRequest = () => {
             return result.data
         }
     })
-    console.log(myRequest);
+    // console.log(myRequest);
     
 
     if (isLoading) return <LoadingSpiner></LoadingSpiner>

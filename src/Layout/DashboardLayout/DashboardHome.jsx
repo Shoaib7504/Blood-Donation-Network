@@ -2,13 +2,12 @@ import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpiner from "../../Components/LoadingSpiner";
-import useRole from "../../Hooks/useRole";
+
 
 const DashboardHome = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-   const {role } = useRole();
-  console.log("ROLE", role);
+
   
   const {
     data: requests = [],

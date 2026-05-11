@@ -22,7 +22,7 @@ const DonationRequest = () => {
 
 
 
-    console.log(details);
+    // console.log(details);
     return (
         <div>
             <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">

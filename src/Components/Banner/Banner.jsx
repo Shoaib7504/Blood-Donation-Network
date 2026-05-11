@@ -20,7 +20,7 @@ const Banner = () => {
     if (isError) console.log(isError);
 
     const sliceData = details.slice(0, 3)
-    console.log(sliceData);
+    // console.log(sliceData);
 
 
     const features = [

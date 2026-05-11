@@ -48,7 +48,7 @@ const CreateRequest = () => {
     } = useForm();
 
     const onSubmit = async data => {
-        console.log(data);
+        // console.log(data);
         const { name, district,contact, note, hospital, blood, date, time } = data
 
         try {
