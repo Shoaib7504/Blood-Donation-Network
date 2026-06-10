@@ -1,23 +1,34 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
+import { CheckCircle2, X } from 'lucide-react';
 import ErrorPage from '../../pages/ErrorPage/ErrorPage';
 import LoadingSpiner from '../../Components/LoadingSpiner';
 import useAuth from '../../Hooks/useAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const CreateRequest = () => {
  const { user } = useAuth()
+ const axiosSecure = useAxiosSecure()
+ const [showSuccess, setShowSuccess] = useState(false)
+
+ // ── BD Location Data ──
+ const [districts, setDistricts] = useState([])
+ const [upazilas, setUpazilas] = useState([])
+ const [selectedDistrictId, setSelectedDistrictId] = useState('')
+ const [filteredUpazilas, setFilteredUpazilas] = useState([])
+
     // use mutation hook use for put ,patch,post method not for get data if you get data then use tanstack query
     const { isPending, isError, mutateAsync, reset: mutationRest } = useMutation({
         mutationFn: async (payload) =>
-            await axios.post(`${import.meta.env.VITE_API_URL}/request`, payload),
+            await axiosSecure.post('/request', payload),
 
         onSuccess: data => {
             console.log(data);
             toast.success('Your request successfully submitted')
+            setShowSuccess(true)
             mutationRest()
 
         },
@@ -37,24 +48,67 @@ const CreateRequest = () => {
 
     })
 
+    // Auto-dismiss the success alert after 5 seconds
+    useEffect(() => {
+        if (showSuccess) {
+            const timer = setTimeout(() => setShowSuccess(false), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [showSuccess]);
 
+    // Fetch districts and upazilas JSON on mount
+    useEffect(() => {
+        fetch('/districts.json')
+            .then(res => res.json())
+            .then(data => {
+                // The JSON has header/database meta entries; the actual data is in the table object
+                const tableEntry = data.find(item => item.type === 'table' && item.name === 'districts')
+                if (tableEntry) {
+                    setDistricts(tableEntry.data)
+                }
+            })
+            .catch(err => console.error('Failed to load districts:', err))
+
+        fetch('/upazilas.json')
+            .then(res => res.json())
+            .then(data => {
+                const tableEntry = data.find(item => item.type === 'table' && item.name === 'upazilas')
+                if (tableEntry) {
+                    setUpazilas(tableEntry.data)
+                }
+            })
+            .catch(err => console.error('Failed to load upazilas:', err))
+    }, [])
+
+    // Filter upazilas when selected district changes
+    useEffect(() => {
+        if (selectedDistrictId) {
+            const filtered = upazilas.filter(u => u.district_id === selectedDistrictId)
+            setFilteredUpazilas(filtered)
+        } else {
+            setFilteredUpazilas([])
+        }
+        // Reset upazila selection when district changes
+        setValue('upazila', '')
+    }, [selectedDistrictId, upazilas])
 
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-        reset
+        reset,
+        setValue
     } = useForm();
 
     const onSubmit = async data => {
         // console.log(data);
-        const { name, district,contact, note, hospital, blood, date, time } = data
+        const { name, district, upazila, contact, note, hospital, blood, date, time } = data
 
         try {
             const requestData = {
                 name,
-                location: `${district}, ${hospital}`,
+                location: `${district}, ${upazila}, ${hospital}`,
                 blood,
                 date,
                 time,
@@ -67,6 +121,7 @@ const CreateRequest = () => {
             // const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/request`, requestData)
             // console.log(data);
             reset()
+            setSelectedDistrictId('')
         } catch (error) {
             console.log(error);
 
@@ -77,7 +132,7 @@ const CreateRequest = () => {
 
 
     return (
-        <div className='px-10'>
+        <div className='px-4 sm:px-6 lg:px-10 pb-10'>
             <ToastContainer
                 position="top-center"
                 autoClose={5000}
@@ -92,41 +147,76 @@ const CreateRequest = () => {
                 transition={Bounce}
             />
 
-            <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">
-                <div className="px-4 py-16 sm:px-6 lg:px-8">
-                    <h1 className="font-display text-4xl ml-20 font-black sm:text-6xl">
+            {/* ── Success Alert Banner ── */}
+            {showSuccess && (
+                <div
+                    className="mt-4 flex items-center gap-3 sm:gap-4 rounded-2xl border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 px-4 sm:px-6 py-4 shadow-lg animate-[slideDown_0.4s_ease-out]"
+                    role="alert"
+                    id="success-alert"
+                >
+                    <span className="flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-full bg-green-500 text-white shadow-md">
+                        <CheckCircle2 className="size-4 sm:size-5" />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                        <p className="font-display text-base sm:text-lg font-bold text-green-800">
+                            Request Submitted!
+                        </p>
+                        <p className="text-xs sm:text-sm text-green-600">
+                            Your blood request has been submitted successfully. We'll notify nearby donors right away.
+                        </p>
+                    </div>
+                    <button
+                        onClick={() => setShowSuccess(false)}
+                        className="shrink-0 rounded-xl p-2 text-green-400 transition hover:bg-green-100 hover:text-green-600 cursor-pointer"
+                        aria-label="Dismiss"
+                    >
+                        <X className="size-5" />
+                    </button>
+                </div>
+            )}
+
+            {/* ── Hero Header ── */}
+            <section className="bg-hero-medical border-b mx-auto rounded-xl mb-6 mt-5 border-border overflow-hidden">
+                <div className="px-5 py-10 sm:px-8 sm:py-14 lg:px-16 lg:py-16">
+                    <h1 className="font-display text-3xl sm:text-4xl lg:text-6xl font-black">
                         Create Blood Request
                     </h1>
-                    <p className="mt-4 max-w-2xl ml-20 text-lg text-muted-foreground">
-                        Beautiful two-column form layout with clear urgency and medical context.
+                    <p className="mt-3 sm:mt-4 max-w-2xl text-sm sm:text-base lg:text-lg text-muted-foreground">
+                        Fill in the details below to submit an urgent blood request. We'll connect you with nearby donors.
                     </p>
                 </div>
             </section>
 
+            {/* ── Form Card ── */}
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="rounded-3xl border bg-white p-6 shadow-md"
+                className="rounded-2xl sm:rounded-3xl border bg-white p-4 sm:p-6 lg:p-8 shadow-md space-y-5"
             >
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
 
                     {/* Recipient */}
-                    <div>
-                        <label htmlFor="recipient">Recipient name</label>
+                    <div className="space-y-2">
+                        <label htmlFor="recipient" className="text-sm font-semibold text-foreground">
+                            Recipient name <span className="text-red-400">*</span>
+                        </label>
                         <input
                             id="recipient"
                             {...register("name", { required: "Recipient name is required" })}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                            placeholder="Recipient name"
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                            placeholder="Enter recipient's full name"
                         />
-                        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+                        {errors.name && <p className="text-red-500 text-xs sm:text-sm">{errors.name.message}</p>}
                     </div>
 
-                    <div>
-                        <label htmlFor="blood">Blood group</label>
+                    {/* Blood Group */}
+                    <div className="space-y-2">
+                        <label htmlFor="blood" className="text-sm font-semibold text-foreground">
+                            Blood group <span className="text-red-400">*</span>
+                        </label>
                         <select
                             id="blood"
                             {...register("blood", { required: "Blood group is required" })}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow cursor-pointer"
                         >
                             <option value="">Select Blood Group</option>
                             <option value="A+">A+</option>
@@ -138,94 +228,133 @@ const CreateRequest = () => {
                             <option value="O+">O+</option>
                             <option value="O-">O-</option>
                         </select>
-
                         {errors.blood && (
-                            <p className="text-red-500">{errors.blood.message}</p>
+                            <p className="text-red-500 text-xs sm:text-sm">{errors.blood.message}</p>
                         )}
                     </div>
 
-                    {/* Hospital */}
-                    <div>
-                        <label htmlFor="hospital">Hospital</label>
-                        <input
-                            id="hospital"
-                            {...register("hospital")}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                            placeholder="Hospital"
-                        />
-                    </div>
-
                     {/* District */}
-                    <div>
-                        <label htmlFor="district">District</label>
-                        <input
+                    <div className="space-y-2">
+                        <label htmlFor="district" className="text-sm font-semibold text-foreground">
+                            District <span className="text-red-400">*</span>
+                        </label>
+                        <select
                             id="district"
-                            {...register("district")}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                            placeholder="District"
-                        />
+                            {...register("district", { required: "District is required" })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow cursor-pointer"
+                            onChange={(e) => {
+                                const selectedName = e.target.value
+                                const district = districts.find(d => d.name === selectedName)
+                                setSelectedDistrictId(district ? district.id : '')
+                                setValue('district', selectedName)
+                            }}
+                        >
+                            <option value="">Select District</option>
+                            {districts.map(d => (
+                                <option key={d.id} value={d.name}>
+                                    {d.name} ({d.bn_name})
+                                </option>
+                            ))}
+                        </select>
+                        {errors.district && <p className="text-red-500 text-xs sm:text-sm">{errors.district.message}</p>}
                     </div>
 
                     {/* Upazila */}
-                    <div>
-                        <label htmlFor="upazila">Upazila</label>
-                        <input
+                    <div className="space-y-2">
+                        <label htmlFor="upazila" className="text-sm font-semibold text-foreground">
+                            Upazila <span className="text-red-400">*</span>
+                        </label>
+                        <select
                             id="upazila"
-                            {...register("upazila")}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                            placeholder="Upazila"
-                        />
+                            {...register("upazila", { required: "Upazila is required" })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={!selectedDistrictId}
+                        >
+                            <option value="">
+                                {selectedDistrictId ? 'Select Upazila' : '-- Select a district first --'}
+                            </option>
+                            {filteredUpazilas.map(u => (
+                                <option key={u.id} value={u.name}>
+                                    {u.name} ({u.bn_name})
+                                </option>
+                            ))}
+                        </select>
+                        {errors.upazila && <p className="text-red-500 text-xs sm:text-sm">{errors.upazila.message}</p>}
                     </div>
 
-                    {/* Date */}
-                    <div>
-                        <label htmlFor="date">Donation date</label>
+                    {/* Hospital */}
+                    <div className="space-y-2">
+                        <label htmlFor="hospital" className="text-sm font-semibold text-foreground">
+                            Hospital
+                        </label>
                         <input
-                            id="date"
-                            type="date"
-                            {...register("date", { required: true })}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                        />
-                    </div>
-
-                    {/* Time */}
-                    <div>
-                        <label htmlFor="time">Donation time</label>
-                        <input
-                            id="time"
-                            type="time"
-                            {...register("time", { required: true })}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
+                            id="hospital"
+                            {...register("hospital")}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                            placeholder="Hospital name"
                         />
                     </div>
 
                     {/* Contact */}
-                    <div>
-                        <label htmlFor="contact">Contact number</label>
+                    <div className="space-y-2">
+                        <label htmlFor="contact" className="text-sm font-semibold text-foreground">
+                            Contact number <span className="text-red-400">*</span>
+                        </label>
                         <input
                             id="contact"
                             {...register("contact", { required: "Contact is required" })}
-                            className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                            placeholder="Contact number"
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                            placeholder="e.g. 01XXXXXXXXX"
+                        />
+                        {errors.contact && <p className="text-red-500 text-xs sm:text-sm">{errors.contact.message}</p>}
+                    </div>
+
+                    {/* Date */}
+                    <div className="space-y-2">
+                        <label htmlFor="date" className="text-sm font-semibold text-foreground">
+                            Donation date <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            id="date"
+                            type="date"
+                            {...register("date", { required: true })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                        />
+                    </div>
+
+                    {/* Time */}
+                    <div className="space-y-2">
+                        <label htmlFor="time" className="text-sm font-semibold text-foreground">
+                            Donation time <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            id="time"
+                            type="time"
+                            {...register("time", { required: true })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
                         />
                     </div>
 
                 </div>
 
-                {/* Note */}
-                <div>
-                    <label htmlFor="note">Medical note</label>
+                {/* Note — full width */}
+                <div className="space-y-2">
+                    <label htmlFor="note" className="text-sm font-semibold text-foreground">
+                        Medical note
+                    </label>
                     <textarea
                         id="note"
+                        rows={4}
                         {...register("note")}
-                        className="mt-4 min-h-18 w-full rounded-2xl border border-input bg-background px-4 py-3 outline-none focus:ring-2 focus:ring-ring input"
-                        placeholder="Medical note"
+                        className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow resize-y min-h-[100px]"
+                        placeholder="Any additional medical details or instructions…"
                     />
                 </div>
 
+                {/* Submit */}
                 <button
                     type="submit"
-                    className="mt-6 cursor-pointer flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2 text-white"
+                    className="w-full sm:w-auto mt-2 cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 px-8 py-3 text-sm sm:text-base font-semibold text-white shadow-md hover:from-red-600 hover:to-red-700 hover:shadow-lg active:scale-[0.98] transition-all"
                 >
                     + Create Request
                 </button>

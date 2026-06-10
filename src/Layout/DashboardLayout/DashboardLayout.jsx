@@ -27,7 +27,7 @@ const DashboardLayout = () => {
   const { Logout } = useAuth();
 
   const { role, isReloading } = useRole();
-  console.log(role);
+  // console.log(role);
 
   if (isReloading) {
     return <LoadingSpiner />;

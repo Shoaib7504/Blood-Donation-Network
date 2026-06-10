@@ -5,7 +5,112 @@ import { Link } from 'react-router';
 import RequestCard from '../RequestCard/RequestCard';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import LoadingSpiner from '../LoadingSpiner';
+
+const SkeletonBlock = ({ className = '' }) => (
+    <div className={`animate-pulse rounded-2xl bg-gradient-to-r from-muted/60 via-muted/30 to-muted/60 bg-[length:200%_100%] ${className}`}
+        style={{ animation: 'shimmer 1.8s ease-in-out infinite' }}
+    />
+);
+
+const HomeSkeleton = () => (
+    <div className="space-y-20">
+        {/* Hero Section Skeleton */}
+        <section className="bg-hero-medical overflow-hidden">
+            <div className="mx-auto grid min-h-[calc(80vh-5rem)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+                <div className="space-y-6">
+                    <SkeletonBlock className="h-8 w-64 rounded-full" />
+                    <SkeletonBlock className="h-16 w-full max-w-lg" />
+                    <SkeletonBlock className="h-16 w-3/4" />
+                    <SkeletonBlock className="h-6 w-full max-w-md" />
+                    <SkeletonBlock className="h-6 w-2/3" />
+                    <div className="flex gap-3 pt-4">
+                        <SkeletonBlock className="h-12 w-44 rounded-2xl" />
+                        <SkeletonBlock className="h-12 w-40 rounded-2xl" />
+                    </div>
+                    <div className="grid max-w-xl grid-cols-3 gap-4 pt-4">
+                        {[1, 2, 3].map(i => <SkeletonBlock key={i} className="h-20 rounded-2xl" />)}
+                    </div>
+                </div>
+                <div className="relative">
+                    <div className="mx-auto max-w-lg rounded-[2rem] border border-border p-6">
+                        <SkeletonBlock className="h-48 rounded-[1.5rem]" />
+                        <div className="mt-5 grid grid-cols-2 gap-4">
+                            <SkeletonBlock className="h-20 rounded-3xl" />
+                            <SkeletonBlock className="h-20 rounded-3xl" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/* Features Skeleton */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center space-y-4">
+                <SkeletonBlock className="mx-auto h-6 w-32" />
+                <SkeletonBlock className="mx-auto h-12 w-96" />
+                <SkeletonBlock className="mx-auto h-5 w-80" />
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="rounded-3xl border border-border bg-card p-6 shadow-card space-y-4">
+                        <SkeletonBlock className="size-12 rounded-2xl" />
+                        <SkeletonBlock className="h-6 w-32" />
+                        <SkeletonBlock className="h-4 w-full" />
+                        <SkeletonBlock className="h-4 w-3/4" />
+                    </div>
+                ))}
+            </div>
+        </section>
+
+        {/* Steps Skeleton */}
+        <section className="bg-surface py-20">
+            <div className="mx-auto mb-12 max-w-2xl text-center space-y-4">
+                <SkeletonBlock className="mx-auto h-6 w-40" />
+                <SkeletonBlock className="mx-auto h-12 w-80" />
+                <SkeletonBlock className="mx-auto h-5 w-72" />
+            </div>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="grid gap-5 md:grid-cols-4">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="rounded-3xl border border-border bg-card p-6 shadow-card space-y-4">
+                            <SkeletonBlock className="size-11 rounded-full" />
+                            <SkeletonBlock className="h-6 w-24" />
+                            <SkeletonBlock className="h-4 w-full" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        {/* Request Cards Skeleton */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto mb-12 max-w-2xl text-center space-y-4">
+                <SkeletonBlock className="mx-auto h-6 w-40" />
+                <SkeletonBlock className="mx-auto h-12 w-80" />
+            </div>
+            <div className="grid gap-5 lg:grid-cols-2">
+                {[1, 2, 3].map(i => (
+                    <div key={i} className="rounded-3xl border border-border bg-card p-6 shadow-card space-y-4">
+                        <div className="flex items-center gap-4">
+                            <SkeletonBlock className="size-14 rounded-full" />
+                            <div className="flex-1 space-y-2">
+                                <SkeletonBlock className="h-5 w-40" />
+                                <SkeletonBlock className="h-4 w-28" />
+                            </div>
+                            <SkeletonBlock className="h-8 w-16 rounded-xl" />
+                        </div>
+                        <SkeletonBlock className="h-4 w-full" />
+                        <SkeletonBlock className="h-4 w-2/3" />
+                        <div className="flex gap-3">
+                            <SkeletonBlock className="h-10 w-28 rounded-xl" />
+                            <SkeletonBlock className="h-10 w-28 rounded-xl" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    </div>
+);
 
 const Banner = () => {
     const { data: details, isLoading, isError } = useQuery({
@@ -16,7 +121,7 @@ const Banner = () => {
         }
     })
 
-    if (isLoading) return <LoadingSpiner></LoadingSpiner>
+    if (isLoading) return <HomeSkeleton />
     if (isError) console.log(isError);
 
     const sliceData = details.slice(0, 3)

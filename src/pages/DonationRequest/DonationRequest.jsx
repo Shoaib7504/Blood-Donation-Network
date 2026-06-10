@@ -26,10 +26,10 @@ const DonationRequest = () => {
     return (
         <div>
             <section className="bg-hero-medical border-b mx-auto rounded-xl mb-1 mt-5 border-border">
-                <div className="  px-4 py-16  sm:px-6 lg:px-8">
-                    <h1 className="font-display text-4xl ml-20 font-black sm:text-6xl">Donation Requests
+                <div className="px-5 sm:px-8 lg:px-16 py-16">
+                    <h1 className="font-display text-4xl font-black sm:text-6xl">Donation Requests
                     </h1>
-                    <p className="mt-4 max-w-2xl ml-20 text-lg text-muted-foreground">Browse urgent and pending blood needs in a clean, scannable layout.
+                    <p className="mt-4 max-w-2xl text-lg text-muted-foreground">Browse urgent and pending blood needs in a clean, scannable layout.
 
                     </p>
                 </div>

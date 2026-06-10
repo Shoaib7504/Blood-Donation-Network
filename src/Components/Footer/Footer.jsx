@@ -8,7 +8,7 @@ import { Link } from 'react-router';
 const Footer = () => {
     const navLinks = [
         { label: "Home", to: "/" },
-        { label: "Donation Requests", to: "/donation-requests" },
+        { label: "Donation Requests", to: "/donation-request" },
         { label: "Search Donors", to: "/search-donor" },
         { label: "Funding", to: "/funding" },
     ]
@@ -44,10 +44,10 @@ const Footer = () => {
                         <h3 className="font-display font-bold">Social</h3>
                         <div className="mt-4 flex gap-3">
 
-                            <span className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><FaFacebookF /></span>
-                            <span className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><IoLogoInstagram /></span>
-                            <span className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><FaLinkedinIn /></span>
-                            <span className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card">𝕏</span>
+                            <Link to='https://www.facebook.com' className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><FaFacebookF /></Link>
+                            <Link to='https://www.instagram.com' className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><IoLogoInstagram /></Link>
+                            <Link to='https://www.linkedin.com' className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card"><FaLinkedinIn /></Link>
+                            <Link to='https://www.twiter.com' className="flex size-10 items-center justify-center rounded-full bg-card font-bold text-primary shadow-card">𝕏</Link>
                         </div>
                     </div>
                 </div>

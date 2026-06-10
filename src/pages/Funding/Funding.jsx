@@ -39,7 +39,7 @@ const Funding = () => {
     }
   };
 
-  // ✅ FIX: /donation is public — use plain axios, no token needed
+  //  donation is public — use plain axios, no token needed
   const {
     data: fundingRecords = [],
     isLoading,
@@ -100,7 +100,7 @@ const Funding = () => {
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <button
                 onClick={handelPayment}
-                className="flex items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-white hover:opacity-90"
+                className="flex cursor-pointer items-center gap-2 rounded-2xl bg-primary px-5 py-3 text-white hover:opacity-90"
               >
                 <HeartHandshake />
                 Give Fund
