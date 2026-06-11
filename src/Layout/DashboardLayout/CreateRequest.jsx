@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Bounce, toast, ToastContainer } from 'react-toastify';
-import { CheckCircle2, X } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { CheckCircle2, X, Calendar, Clock } from 'lucide-react';
 import ErrorPage from '../../pages/ErrorPage/ErrorPage';
 import LoadingSpiner from '../../Components/LoadingSpiner';
 import useAuth from '../../Hooks/useAuth';
@@ -133,19 +133,6 @@ const CreateRequest = () => {
 
     return (
         <div className='px-4 sm:px-6 lg:px-10 pb-10'>
-            <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
 
             {/* ── Success Alert Banner ── */}
             {showSuccess && (
@@ -311,28 +298,43 @@ const CreateRequest = () => {
 
                     {/* Date */}
                     <div className="space-y-2">
-                        <label htmlFor="date" className="text-sm font-semibold text-foreground">
+                        <label htmlFor="date" className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                            <Calendar className="size-4 text-primary" />
                             Donation date <span className="text-red-400">*</span>
                         </label>
                         <input
                             id="date"
                             type="date"
-                            {...register("date", { required: true })}
-                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                            min={new Date().toISOString().split("T")[0]}
+                            onClick={(e) => {
+                                if (typeof e.target.showPicker === "function") {
+                                    e.target.showPicker();
+                                }
+                            }}
+                            {...register("date", { required: "Donation date is required" })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow cursor-pointer"
                         />
+                        {errors.date && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.date.message}</p>}
                     </div>
 
                     {/* Time */}
                     <div className="space-y-2">
-                        <label htmlFor="time" className="text-sm font-semibold text-foreground">
+                        <label htmlFor="time" className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                            <Clock className="size-4 text-primary" />
                             Donation time <span className="text-red-400">*</span>
                         </label>
                         <input
                             id="time"
                             type="time"
-                            {...register("time", { required: true })}
-                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                            onClick={(e) => {
+                                if (typeof e.target.showPicker === "function") {
+                                    e.target.showPicker();
+                                }
+                            }}
+                            {...register("time", { required: "Donation time is required" })}
+                            className="w-full rounded-xl sm:rounded-2xl border border-input bg-background px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-ring transition-shadow cursor-pointer"
                         />
+                        {errors.time && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.time.message}</p>}
                     </div>
 
                 </div>

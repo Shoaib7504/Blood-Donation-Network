@@ -3,8 +3,7 @@ import { Droplets, Eye, EyeOff, Lock, Mail, ShieldCheck, Upload, User } from 'lu
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
-import { Bounce, toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import useAuth from '../../Hooks/useAuth';
 import axios from 'axios';
 import { saveOrUpdateUser } from '../../utils';
@@ -93,21 +92,6 @@ const RegisterPage = () => {
 
     return (
         <div>
-            {/*  Toast Container */}
-            <ToastContainer
-                position="top-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
-
             <section className="bg-hero-medical min-h-[calc(100vh-5rem)] px-4 py-12 sm:px-6 lg:px-8">
                 <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
 

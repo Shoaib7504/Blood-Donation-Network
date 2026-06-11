@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, Filter, MapPin, Search, SortAsc, X } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import LoadingSpiner from '../../Components/LoadingSpiner';
 
 const ITEMS_PER_PAGE_OPTIONS = [6, 9, 12, 18];
@@ -13,7 +14,7 @@ const SearchDonor = () => {
     const [searchText, setSearchText] = useState('');
     const [bloodFilter, setBloodFilter] = useState('');
     const [districtFilter, setDistrictFilter] = useState('');
-    const [sortBy, setSortBy] = useState('name-asc');
+    const [sortBy, setSortBy] = useState('newest');
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(6);
     const [bdDistricts, setBdDistricts] = useState([]);
@@ -84,6 +85,10 @@ const SearchDonor = () => {
         // sorting
         filtered.sort((a, b) => {
             switch (sortBy) {
+                case 'newest':
+                    const dateA = new Date(a.date + "T" + (a.time || "00:00"));
+                    const dateB = new Date(b.date + "T" + (b.time || "00:00"));
+                    return dateB - dateA;
                 case 'name-asc':
                     return (a.name || '').localeCompare(b.name || '');
                 case 'name-desc':
@@ -122,7 +127,7 @@ const SearchDonor = () => {
         setSearchText('');
         setBloodFilter('');
         setDistrictFilter('');
-        setSortBy('name-asc');
+        setSortBy('newest');
         resetPage();
     };
 
@@ -148,6 +153,29 @@ const SearchDonor = () => {
         }
 
         return pages;
+    };
+
+    const handleContactDonor = (donor) => {
+        if (donor.contact) {
+            navigator.clipboard.writeText(donor.contact)
+                .then(() => {
+                    toast.success(`Contact number of ${donor.name} copied to clipboard!`, {
+                        position: "top-center",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "light",
+                    });
+                })
+                .catch((err) => {
+                    console.error('Failed to copy contact number: ', err);
+                    toast.error('Failed to copy contact number.');
+                });
+        } else {
+            toast.warn('Contact number not available for this donor.');
+        }
     };
 
     //  loading / error states 
@@ -260,6 +288,7 @@ const SearchDonor = () => {
                                 className="rounded-xl border px-4 py-2.5 text-gray-600 bg-white
                                            focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all cursor-pointer"
                             >
+                                <option value="newest">Newest Requests</option>
                                 <option value="name-asc">Name (A → Z)</option>
                                 <option value="name-desc">Name (Z → A)</option>
                                 <option value="availability">Availability</option>
@@ -350,7 +379,10 @@ const SearchDonor = () => {
                                         {donor.last || "Available"}
                                     </p>
 
-                                    <button className="mt-5 w-full rounded-xl border border-red-300 py-2 text-red-500 hover:bg-red-50">
+                                    <button
+                                        onClick={() => handleContactDonor(donor)}
+                                        className="mt-5 w-full rounded-xl border border-red-300 py-2 text-red-500 hover:bg-red-50 cursor-pointer transition-colors"
+                                    >
                                         Contact Donor
                                     </button>
                                 </article>

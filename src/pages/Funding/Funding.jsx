@@ -120,7 +120,7 @@ const Funding = () => {
 
             <div className="mt-4 flex items-center gap-3">
               <h2 className="text-5xl font-black text-primary">
-                ৳ {totalFund}
+                $ {totalFund}
               </h2>
 
               <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-600">
@@ -231,7 +231,7 @@ const Funding = () => {
 
                     {/* amount */}
                     <td className="px-6 py-4 font-bold text-primary">
-                      ৳ {donation.donationAmount}
+                      $ {donation.donationAmount}
                     </td>
 
                     {/* date */}
@@ -268,7 +268,7 @@ const Funding = () => {
                     colSpan={3}
                     className="px-6 py-4 text-lg font-black text-primary"
                   >
-                    ৳ {totalFund}
+                    $ {totalFund}
                   </td>
                 </tr>
               </tfoot>

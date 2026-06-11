@@ -1,13 +1,40 @@
 import { CalendarClock, MapPin } from 'lucide-react';
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const RequestCard = ({ request }) => {
+    const [copied, setCopied] = useState(false);
+
     // Safe location handling (supports string or object)
     const locationText =
         typeof request.location === "string"
             ? request.location
             : `${request.location?.district || ""}, ${request.location?.hospital || ""}`;
+
+    const handleContactDonor = () => {
+        if (request.contact) {
+            navigator.clipboard.writeText(request.contact)
+                .then(() => {
+                    setCopied(true);
+                    toast.success(`Contact number of ${request.name} copied to clipboard!`, {
+                        position: "top-center",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "light",
+                    });
+                    setTimeout(() => setCopied(false), 2000);
+                })
+                .catch((err) => {
+                    console.error('Failed to copy contact number: ', err);
+                    toast.error('Failed to copy contact number.');
+                });
+        } else {
+            toast.warn('Contact number not available for this request.');
+        }
+    };
 
     return (
         <div>
@@ -52,8 +79,15 @@ const RequestCard = ({ request }) => {
 
                     {/* Action */}
                     <div>
-                        <button className=" px-3 py-1.5 rounded-2xl bg-blush text-primary hover:bg-accent hover:-translate-y-0.5">
-                            View Details
+                        <button 
+                            onClick={handleContactDonor}
+                            className={`px-3 py-1.5 rounded-2xl font-medium transition-all duration-200 cursor-pointer ${
+                                copied 
+                                    ? "bg-green-100 text-green-700 hover:bg-green-200" 
+                                    : "bg-blush text-primary hover:bg-accent hover:-translate-y-0.5"
+                            }`}
+                        >
+                            {copied ? "Copied!" : "Contact Donor"}
                         </button>
                     </div>
                 </div>

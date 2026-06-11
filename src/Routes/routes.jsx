@@ -48,8 +48,8 @@ const router = createBrowserRouter([
                 </PrivateRoutes>
             },
             {
-                path:'/payment-success',
-                Component:PaymentSuccess
+                path: '/payment-success',
+                Component: PaymentSuccess
             }
         ]
     },

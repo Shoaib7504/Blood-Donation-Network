@@ -124,7 +124,23 @@ const Banner = () => {
     if (isLoading) return <HomeSkeleton />
     if (isError) console.log(isError);
 
-    const sliceData = details.slice(0, 3)
+    // 1. Create a copy of the requests list (if we have data)
+    let allRequests = [];
+    if (details) {
+        allRequests = [...details];
+    }
+
+    // 2. Sort the requests so the newest date & time comes first
+    allRequests.sort((a, b) => {
+        const dateA = new Date(a.date + "T" + (a.time || "00:00"));
+        const dateB = new Date(b.date + "T" + (b.time || "00:00"));
+        
+        // Subtracting dates gives the difference in milliseconds (b - a for newest first)
+        return dateB - dateA;
+    });
+
+    // 3. Slice the first 3 requests to show on the banner
+    const sliceData = allRequests.slice(0, 3);
     // console.log(sliceData);
 
 
